@@ -11,9 +11,6 @@ model Recipe {
   id          Int      @id @default(autoincrement())
   name        String
   description String
-  prepTime    Int      // Preparation time in minutes
-  cookTime    Int      // Cooking time in minutes
-  servingSize Int
   categoryId  Int
   Category    Category @relation(fields: [categoryId], references: [id])
 
