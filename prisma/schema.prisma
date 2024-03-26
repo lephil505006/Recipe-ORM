@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Recipe {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  prepTime    Int      // Preparation time in minutes
+  cookTime    Int      // Cooking time in minutes
+  servingSize Int
+  categoryId  Int
+  Category    Category @relation(fields: [categoryId], references: [id])
+
+  @@map("recipes")
+}
+
+model Ingredient {
+  id    Int      @id @default(autoincrement())
+  name  String
+  type  String?
+
+  @@map("ingredients")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  recipes     Recipe[]
+
+  @@map("categories")
+}
