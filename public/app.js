@@ -3,24 +3,47 @@ document
   .addEventListener("submit", function (event) {
     event.preventDefault(); // Prevent the form from submitting in the traditional way
 
-    const name = document.getElementById("recipeName").value;
-    const description = document.getElementById("recipeDescription").value;
-    const categoryId = document.getElementById("recipeCategory").value;
+    const recipeName = document.getElementById("recipeName").value;
+    const recipeDescription =
+      document.getElementById("recipeDescription").value;
+    const recipeCategory = document.getElementById("recipeCategory").value;
+    const ingredientInputs = document.querySelectorAll(".ingredient-input");
+
+    const ingredients = Array.from(ingredientInputs).map((input) => {
+      return {
+        name: input.querySelector('[name="ingredientName[]"]').value,
+        type: input.querySelector('[name="ingredientType[]"]').value,
+      };
+    });
+
+    const recipeData = {
+      name: recipeName,
+      description: recipeDescription,
+      categoryId: recipeCategory,
+      ingredients: ingredients,
+    };
 
     fetch("/recipes", {
-      method: "POST", // Specify the method
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name, description, categoryId }), // Convert JavaScript object to JSON
+      body: JSON.stringify(recipeData),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log("Success:", data);
-        document.getElementById("loadData").click(); // Reload recipes
+        // Optionally reset the form here or give feedback to the user
+        // document.getElementById('addRecipeForm').reset();
       })
       .catch((error) => {
         console.error("Error:", error);
+        // Optionally inform the user that an error occurred
       });
   });
 

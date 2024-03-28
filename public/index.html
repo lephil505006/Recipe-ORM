@@ -20,7 +20,22 @@
             <option value="3">Dinner</option>
             <option value="4">Dessert</option>
         </select>
-
+        <h3>Ingredients</h3>
+        <div id="ingredientsContainer">
+            <div class="ingredient-input">
+                <input type="text" name="ingredientName[]" placeholder="Ingredient Name" required>
+                <select name="ingredientType[]">
+                    <option value="">Select Type</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Meat">Meat</option>
+                    <option value="Vegetable">Vegetable</option>
+                    <option value="Fruit">Fruit</option>
+                    <option value="Grain">Grain</option>
+                    <option value="Spice">Spice</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+        </div>
         <button type="submit">Add Recipe</button>
 
     </form>
