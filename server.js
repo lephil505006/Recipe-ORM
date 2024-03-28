@@ -142,18 +142,16 @@ async function deleteRecipe(id) {
     console.log(
       `Recipe deleted successfully: ${result.affectedRows} row(s) affected.`
     );
-    // Return a meaningful result, or null if no rows were affected.
     return result.affectedRows > 0;
   } catch (error) {
     console.error("Error deleting the recipe:", error);
-    // Rethrow the error to let the caller handle it.
     throw error;
   }
 }
 
 app.delete("/recipes/:id", async (req, res) => {
   try {
-    const recipeId = parseInt(req.params.id, 10); // Ensure the ID is a number
+    const recipeId = parseInt(req.params.id, 10);
     const wasDeleted = await deleteRecipe(recipeId);
     if (wasDeleted) {
       res.status(200).send(`Recipe with ID ${recipeId} has been deleted.`);

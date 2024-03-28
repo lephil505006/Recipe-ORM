@@ -13,9 +13,19 @@
     <form id="addRecipeForm">
         <input type="text" id="recipeName" placeholder="Recipe Name" required>
         <input type="text" id="recipeDescription" placeholder="Description" required>
-        <input type="number" id="recipeCategory" placeholder="Category ID" required>
+        <label for="recipeCategory">Choose a meal time:</label>
+        <select id="recipeCategory" name="recipeCategory" required>
+            <option value="1">Breakfast</option>
+            <option value="2">Lunch</option>
+            <option value="3">Dinner</option>
+            <option value="4">Dessert</option>
+        </select>
+
         <button type="submit">Add Recipe</button>
+
     </form>
+    <button id="viewRecipesBtn">View All Recipes</button>
+    <div id="recipesContainer"></div>
 
 
     <script src="app.js"></script>

@@ -23,3 +23,26 @@ document
         console.error("Error:", error);
       });
   });
+
+document
+  .getElementById("viewRecipesBtn")
+  .addEventListener("click", function () {
+    fetch("/recipes") // Adjust the URL based on your API's URL structure
+      .then((response) => response.json())
+      .then((recipes) => {
+        const recipesContainer = document.getElementById("recipesContainer");
+        recipesContainer.innerHTML = ""; // Clear previous content
+
+        // Create a list of recipes
+        const ul = document.createElement("ul");
+        recipes.forEach((recipe) => {
+          const li = document.createElement("li");
+          li.textContent = `${recipe.name}: ${recipe.description}`;
+          ul.appendChild(li);
+        });
+        recipesContainer.appendChild(ul);
+      })
+      .catch((error) => {
+        console.error("Error fetching recipes:", error);
+      });
+  });
