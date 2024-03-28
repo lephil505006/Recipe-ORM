@@ -9,8 +9,14 @@
 
 <body>
     <h1>Recipe Database Test</h1>
-    <button id="loadData">Load Recipes</button>
-    <ul id="recipeList"></ul>
+    <h2>Add a New Recipe</h2>
+    <form id="addRecipeForm">
+        <input type="text" id="recipeName" placeholder="Recipe Name" required>
+        <input type="text" id="recipeDescription" placeholder="Description" required>
+        <input type="number" id="recipeCategory" placeholder="Category ID" required>
+        <button type="submit">Add Recipe</button>
+    </form>
+
 
     <script src="app.js"></script>
 </body>

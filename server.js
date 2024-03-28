@@ -28,13 +28,13 @@ pool
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send("Something brokes!");
+  res.status(500).send("Something broke!");
 });
 
+// GET route to fetch all recipes
 app.get("/recipes", async (req, res) => {
   try {
-    console.log("Fetching recipes...");
-    const [rows, fields] = await pool.query("SELECT * FROM recipes");
+    const [rows, fields] = await pool.query("SELECT * FROM recipe_orm.recipes");
     console.log("Fetched recipes:", rows);
     res.json(rows);
   } catch (error) {
@@ -43,10 +43,27 @@ app.get("/recipes", async (req, res) => {
   }
 });
 
+// POST route to add a new recipe
+app.post("/recipes", async (req, res) => {
+  const { name, description, categoryId } = req.body;
+  try {
+    const query =
+      "INSERT INTO recipe_orm.recipes (name, description, categoryId) VALUES (?, ?, ?)";
+    const [result] = await pool.execute(query, [name, description, categoryId]);
+    console.log(`A new recipe has been added with ID: ${result.insertId}`);
+    res
+      .status(201)
+      .json({ message: "Recipe added successfully", id: result.insertId });
+  } catch (error) {
+    console.error("Error adding a new recipe:", error);
+    res.status(500).send("Error adding recipe");
+  }
+});
+
 //CRUD OPS
 async function createRecipe(name, description, categoryId) {
   try {
-    const query = `INSERT INTO recipes (name, description, categoryId) VALUES (?, ?, ?)`;
+    const query = `INSERT INTO recipe_orm.recipes (name, description, categoryId) VALUES (?, ?, ?)`;
     const [result] = await pool.execute(query, [name, description, categoryId]);
     console.log(`A new recipe has been added with ID: ${result.insertId}`);
   } catch (error) {
@@ -56,7 +73,7 @@ async function createRecipe(name, description, categoryId) {
 
 async function fetchRecipes() {
   try {
-    const query = `SELECT * FROM recipes`;
+    const query = `SELECT * FROM recipe_orm.recipes`;
     const [rows] = await pool.query(query);
     console.log("Fetched recipes:", rows);
     return rows;
@@ -67,7 +84,7 @@ async function fetchRecipes() {
 
 async function updateRecipe(id, name, description, categoryId) {
   try {
-    const query = `UPDATE recipes SET name = ?, description = ?, categoryId = ? WHERE id = ?`;
+    const query = `UPDATE recipe_orm.recipes SET name = ?, description = ?, categoryId = ? WHERE id = ?`;
     const [result] = await pool.execute(query, [
       name,
       description,
@@ -84,7 +101,7 @@ async function updateRecipe(id, name, description, categoryId) {
 
 async function deleteRecipe(id) {
   try {
-    const query = `DELETE FROM recipes WHERE id = ?`;
+    const query = `DELETE FROM recipe_orm.recipes WHERE id = ?`;
     const [result] = await pool.execute(query, [id]);
     console.log(
       `Recipe deleted successfully: ${result.affectedRows} row(s) affected.`
