@@ -71,6 +71,18 @@ async function createRecipe(name, description, categoryId) {
   }
 }
 
+app.post("/recipes", async (req, res) => {
+  try {
+    const { name, description, categoryId } = req.body;
+    await createRecipe(name, description, categoryId);
+    res.status(201).json({ message: "Recipe created successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error creating recipe", error: error.message });
+  }
+});
+
 async function fetchRecipes() {
   try {
     const query = `SELECT * FROM recipe_orm.recipes`;
@@ -81,6 +93,17 @@ async function fetchRecipes() {
     console.error("Error fetching recipes:", error);
   }
 }
+
+app.get("/recipes", async (req, res) => {
+  try {
+    const recipes = await fetchRecipes();
+    res.status(200).json(recipes);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching recipes", error: error.message });
+  }
+});
 
 async function updateRecipe(id, name, description, categoryId) {
   try {
@@ -99,6 +122,19 @@ async function updateRecipe(id, name, description, categoryId) {
   }
 }
 
+app.put("/recipes/:id", async (req, res) => {
+  try {
+    const { name, description, categoryId } = req.body;
+    const recipeId = parseInt(req.params.id, 10);
+    await updateRecipe(recipeId, name, description, categoryId);
+    res.status(200).json({ message: "Recipe updated successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error updating recipe", error: error.message });
+  }
+});
+
 async function deleteRecipe(id) {
   try {
     const query = `DELETE FROM recipe_orm.recipes WHERE id = ?`;
@@ -106,10 +142,28 @@ async function deleteRecipe(id) {
     console.log(
       `Recipe deleted successfully: ${result.affectedRows} row(s) affected.`
     );
+    // Return a meaningful result, or null if no rows were affected.
+    return result.affectedRows > 0;
   } catch (error) {
     console.error("Error deleting the recipe:", error);
+    // Rethrow the error to let the caller handle it.
+    throw error;
   }
 }
+
+app.delete("/recipes/:id", async (req, res) => {
+  try {
+    const recipeId = parseInt(req.params.id, 10); // Ensure the ID is a number
+    const wasDeleted = await deleteRecipe(recipeId);
+    if (wasDeleted) {
+      res.status(200).send(`Recipe with ID ${recipeId} has been deleted.`);
+    } else {
+      res.status(404).send(`Recipe with ID ${recipeId} not found.`);
+    }
+  } catch (error) {
+    res.status(500).send("Error deleting recipe");
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
