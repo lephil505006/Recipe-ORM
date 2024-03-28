@@ -6,7 +6,7 @@ document.getElementById("loadData").addEventListener("click", function () {
       listElement.innerHTML = "";
       recipes.forEach((recipe) => {
         const listItem = document.createElement("li");
-        listItem.textContent = recipe.name; // Make sure 'name' matches your column name
+        listItem.textContent = recipe.name;
         listElement.appendChild(listItem);
       });
     })
