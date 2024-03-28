@@ -8,19 +8,22 @@ datasource db {
 }
 
 model Recipe {
-  id          Int      @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   name        String
   description String
   categoryId  Int
-  Category    Category @relation(fields: [categoryId], references: [id])
+  Category    Category     @relation(fields: [categoryId], references: [id])
+  ingredients Ingredient[] // This line indicates that a Recipe can have multiple Ingredients
 
   @@map("recipes")
 }
 
 model Ingredient {
-  id    Int      @id @default(autoincrement())
-  name  String
-  type  String?
+  id       Int    @id @default(autoincrement())
+  name     String
+  type     String?
+  recipeId Int    // This field is the foreign key pointing to the Recipe model
+  Recipe   Recipe @relation(fields: [recipeId], references: [id]) // This establishes the relationship
 
   @@map("ingredients")
 }
@@ -29,7 +32,8 @@ model Category {
   id          Int      @id @default(autoincrement())
   name        String
   description String?
-  recipes     Recipe[]
+  recipes     Recipe[] // Indicates that a Category can have multiple Recipes
 
   @@map("categories")
 }
+
